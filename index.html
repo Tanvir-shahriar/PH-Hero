@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PH Tube</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-clifford: #da373d;
+      }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav
+            class="flex justify-between py-5  lg:w-11/12 mx-auto items-center border-b border-gray-300 p-3 md:p-5 gap-5 ">
+            <div class="w-[100px] flex-1">
+                <img src="Logo.png" alt="programming hero logo">
+            </div>
+            <div class="flex-1 justify-center w-full">
+                <label class="input w-full ">
+                    <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none"
+                            stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </g>
+                    </svg>
+                    <input class="focus:outline-none focus:ring-0" type="search" required placeholder="Search" />
+                </label>
+            </div>
+
+            <div class="w-full flex-1 md:text-end text-center">
+                <button class="btn bg-red-500 text-white">Sort</button>
+            </div>
+        </nav>
+    </header>
+
+    <nav id="navbar" class="flex gap-5 justify-center p-5">
+
+    </nav>
+
+    <main>
+        <section id="videos" class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-5 lg:w-11/12 mx-auto p-5">
+
+        </section>
+    </main>
+
+
+    <script src="js/videos.js"></script>
+</body>
+
+</html>
