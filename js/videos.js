@@ -35,12 +35,26 @@ function convertTimestamp(timestamp) {
             return result.trim() || "0 seconds";  // Default if everything is zero
         }
 
+// button color change
+function removeActiveButton() {
+    const activeButton = document.getElementsByClassName('btn-category');
+    for (const button of activeButton) {
+        button.classList.remove('bg-red-500', 'text-white');
+    }
+}
 // function to click on the function
         const loadVideoCategories = (id) => {
-
     fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
         .then(res => res.json())
-        .then(data => displayVideos(data.category))
+        .then(data => {
+            displayVideos(data.category);
+            // remove active button
+            removeActiveButton();
+            // change active button
+            const buttons = document.getElementById(`btn-${id}`);
+            buttons.classList.add('bg-red-500', 'text-white');            
+        }
+        )
         .catch(error => console.log(error));
         }
 
@@ -55,11 +69,11 @@ const displayCategories = categories => {
     console.log(categories);
     const buttons = document.getElementById('navbar');
     
-
+// buttons.innerHTML = '';
     for (const item of categories) {
         const buttonDiv = document.createElement('div');
         buttonDiv.innerHTML = `
-        <button onclick = "loadVideoCategories(${item.category_id})" class="btn">${item.category}</button>
+        <button id = "btn-${item.category_id}" onclick = "loadVideoCategories(${item.category_id})" class="btn btn-category">${item.category}</button>
         `;
         buttons.appendChild(buttonDiv);
     }
