@@ -1,3 +1,49 @@
+// time handling function
+function convertTimestamp(timestamp) {
+            // Define constants for time conversion
+            const secondsInMinute = 60;
+            const secondsInHour = secondsInMinute * 60;
+            const secondsInDay = secondsInHour * 24;
+            const secondsInYear = secondsInDay * 365; // Assuming a non-leap year for simplicity
+
+            // Convert timestamp to total seconds
+            const totalSeconds = timestamp;
+
+            // Calculate years, months, days, hours, minutes, and seconds
+            const years = Math.floor(totalSeconds / secondsInYear);
+            const hours = Math.floor((totalSeconds % secondsInYear) / secondsInHour);
+            const minutes = Math.floor((totalSeconds % secondsInHour) / secondsInMinute);
+            const seconds = totalSeconds % secondsInMinute;
+
+            // Create the result string, showing only non-zero values
+            let result = "";
+
+            if (years > 0) {
+                result += years + " year" + (years > 1 ? "s" : "") + " ";
+            }
+            if (hours > 0) {
+                result += hours + " hour" + (hours > 1 ? "s" : "") + " ";
+            }
+            if (minutes > 0) {
+                result += minutes + " minute" + (minutes > 1 ? "s" : "") + " ";
+            }
+            if (seconds > 0) {
+                result += seconds + " second" + (seconds > 1 ? "s" : "") + " ";
+            }
+
+            // Trim extra space at the end and return the result
+            return result.trim() || "0 seconds";  // Default if everything is zero
+        }
+
+// function to click on the function
+        const loadVideoCategories = (id) => {
+
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+        .then(res => res.json())
+        .then(data => displayVideos(data.category))
+        .catch(error => console.log(error));
+        }
+
 const loadCategories = () => {
     fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
         .then(res => res.json())
@@ -7,57 +53,76 @@ const loadCategories = () => {
 
 const displayCategories = categories => {
     console.log(categories);
-    const navbar = document.getElementById('navbar');
+    const buttons = document.getElementById('navbar');
+    
 
     for (const item of categories) {
-        const button = document.createElement('button');
-        button.classList.add('btn');
-        button.innerText = item.category;
-        navbar.appendChild(button);
+        const buttonDiv = document.createElement('div');
+        buttonDiv.innerHTML = `
+        <button onclick = "loadVideoCategories(${item.category_id})" class="btn">${item.category}</button>
+        `;
+        buttons.appendChild(buttonDiv);
     }
 
 };
-
+// loading videos
 const loadVideos = () => {
     fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
         .then(res => res.json())
         .then(data => displayVideos(data.videos))
         .catch(error => console.log(error));
 }
-
-const displayVideos = videos => {
+// display videos
+const displayVideos = (videos) => {
     const videosContainer = document.getElementById('videos');
+    videosContainer.innerHTML = '';
+    if(videos.length === 0){
+        videosContainer.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-4');
+        videosContainer.innerHTML = `
+        <div class="flex flex-col justify-center items-center mx-auto min-h-[300px] gap-10">
+        <img src = "icon.png" class = "w-48 h-48 mx-auto" alt = "No content">
+        <h2 class="text-3xl text-center">Oops!! Sorry, There is no content here</h2>
+        </div>
+        `;
+        return;
+    }
+    else{
+        videosContainer.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-4');
+    }
     console.log(videos);
     for (const video of videos) {
         const videoDiv = document.createElement('div');
         
         videoDiv.innerHTML = `
-        <figure class = "h-[200px]">
-            <img class ="w-full h-full object-cover " src="${video.thumbnail}" alt="Video Thumbnail" />
+        <figure class="h-[200px] relative">
+            <img class="w-full h-full object-cover" src="${video.thumbnail}" alt="Video Thumbnail" />
         </figure>
         <div class="card-body">
-            <div class="flex gap-3" >
+            <div class="flex gap-3">
                 <div class="flex-shrink-0">
                     <img class="w-10 h-10 rounded-full" src="${video.authors[0].profile_picture}" alt="Author Image" />
+                    ${
+                        video.others.posted_date?.length == 0 ? "" : `<span class="absolute right-2 bottom-32 bg-black text-white text-sm px-1 rounded">${convertTimestamp(video.others.posted_date)}</span>` 
+                }
+                   
                 </div>
-                <div class="space-y-1"> 
+                <div class="space-y-1">
                     <h2 class="card-title">${video.title}</h2>
-                    <div class="flex items-center gap-1">
-                        <p class="text-sm text-gray-500">${video.authors[0].profile_name}</p>
-                        <img 
-                        src="https://img.icons8.com/color/48/verified-badge.png" 
-                        alt="Verified Badge" 
-                        class="w-4 h-4 inline-block" />
+                    <div class="flex items-center gap-1 relative">
+                        <p class="text-sm text-gray-500 m-0 p-0">${video.authors[0].profile_name}</p>
+                        ${video.authors[0].verified === true ? `<img 
+                            src="https://img.icons8.com/color/48/verified-badge.png" 
+                            alt="Verified Badge" 
+                            class="w-4 h-4 object-cover m-0 p-0 inline-block align-middle absolute left-25" />` : ''}
                     </div>
                     <p class="text-xs text-gray-500">${video.others.views} Views</p>
+                    
                 </div>
-
             </div>
         </div>
         `;
-        
+               
         videoDiv.classList = "card bg-base-100 shadow-sm";
-
         videosContainer.appendChild(videoDiv);
     }
 }
